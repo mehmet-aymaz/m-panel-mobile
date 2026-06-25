@@ -613,7 +613,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
   }
 
   Widget _buildUpdateCheckCard(BuildContext context, SettingsProvider settingsProv) {
-    const String currentAppVersion = 'v1.0.0';
+    final String currentAppVersion = settingsProv.currentAppVersion;
 
     return Card(
       child: Padding(

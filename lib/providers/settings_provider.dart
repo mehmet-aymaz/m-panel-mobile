@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../services/api_service.dart';
 import '../services/update_service.dart';
 
@@ -20,6 +21,7 @@ class SettingsProvider extends ChangeNotifier {
   String _changelog = '';
   String? _apkDownloadUrl;
   final UpdateService _updateService = UpdateService();
+  String _currentAppVersion = 'v1.0.0';
 
   bool get isCheckingUpdate => _isCheckingUpdate;
   bool get isDownloadingUpdate => _isDownloadingUpdate;
@@ -28,6 +30,7 @@ class SettingsProvider extends ChangeNotifier {
   String get latestVersion => _latestVersion;
   String get changelog => _changelog;
   String? get apkDownloadUrl => _apkDownloadUrl;
+  String get currentAppVersion => _currentAppVersion;
 
   // Local notification preferences (simulated push)
   bool _notifyCpuRam = true;
@@ -50,6 +53,15 @@ class SettingsProvider extends ChangeNotifier {
 
   SettingsProvider() {
     loadLocalNotificationPreferences();
+    initVersion();
+  }
+
+  Future<void> initVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      _currentAppVersion = 'v${packageInfo.version}';
+      notifyListeners();
+    } catch (_) {}
   }
 
   // 1. Fetch System Settings
