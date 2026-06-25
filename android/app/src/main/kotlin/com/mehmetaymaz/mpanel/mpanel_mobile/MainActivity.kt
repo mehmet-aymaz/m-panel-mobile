@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
 import java.io.File
+import android.provider.Settings
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.mehmetaymaz.mpanel.mpanel_mobile/update"
@@ -37,6 +38,17 @@ class MainActivity: FlutterActivity() {
         val file = File(filePath)
         if (!file.exists()) {
             throw Exception("Dosya bulunamadı: $filePath")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!context.packageManager.canRequestPackageInstalls()) {
+                val settingsIntent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(settingsIntent)
+                return
+            }
         }
 
         val intent = Intent(Intent.ACTION_VIEW)
