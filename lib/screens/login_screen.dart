@@ -654,7 +654,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(width: 10),
               InkWell(
                 onTap: () async {
-                  final val = _serverUrlController.text.trim();
+                  var val = _serverUrlController.text.trim();
                   if (val.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -665,16 +665,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     return;
                   }
                   
+                  if (!val.startsWith('http://') && !val.startsWith('https://')) {
+                    val = 'https://$val';
+                  }
+                  
                   final uri = Uri.tryParse(val);
                   if (uri == null || !uri.hasScheme || !uri.hasAuthority) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Geçerli bir URL girin (http:// veya https:// ile)'),
+                        content: Text('Geçerli bir URL girin'),
                         backgroundColor: Colors.redAccent,
                       ),
                     );
                     return;
                   }
+
+                  _serverUrlController.text = val;
 
                   // Save immediately to local storage
                   await _storageService.saveServerUrl(val);
