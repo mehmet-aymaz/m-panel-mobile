@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <application
-        android:label="mpanel_mobile"
+        android:label="M-Panel"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
